@@ -11,5 +11,3 @@
 ### Documentation
 
 * simplify CHANGELOG.md seed to a bare title ([89b42e3](https://github.com/Besaiem/paybeta-php-sdk/commit/89b42e394a2a1336563428c92d8d7db7df5f03c4))
-
-## Changelog
