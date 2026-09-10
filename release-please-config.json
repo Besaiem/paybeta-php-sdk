@@ -3,7 +3,6 @@
   "packages": {
     ".": {
       "release-type": "simple",
-      "package-name": "paybetaby/php-sdk",
       "changelog-path": "CHANGELOG.md",
       "changelog-sections": [
         { "type": "feat", "section": "Features" },
