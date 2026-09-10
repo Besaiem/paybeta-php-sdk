@@ -33,3 +33,23 @@ jobs:
 
       - name: Run tests
         run: composer test
+
+  commitlint:
+    name: Lint commit messages
+    # Only meaningful on a PR, which has a defined commit range to check.
+    # This matters here specifically because release-please reads these
+    # types to decide the next version bump and changelog section — a
+    # wrongly-typed commit reaching main silently changes what the next
+    # release does (or skips doing).
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Lint all commits in this PR
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json

@@ -133,10 +133,10 @@ header("Location: {$link['checkoutUrl']}");
 
 PayBeta uses **API key authentication**. Pass your key once when constructing the client (or via `config/paybeta.php` in Laravel) — every request carries it automatically via the `X-API-Key` header.
 
-| Key prefix  | Environment          |
-|-------------|-----------------------|
-| `pb_live_…` | Production (live)    |
-| `pb_test_…` | Sandbox (test mode)  |
+| Key prefix  | Environment         |
+| ----------- | ------------------- |
+| `pb_live_…` | Production (live)   |
+| `pb_test_…` | Sandbox (test mode) |
 
 > **Keep your API key secret.** Never embed it in client-side code or commit it to version control. Use environment variables (`.env`, never committed).
 
@@ -157,13 +157,13 @@ $paybeta = new PaybetaClient(
 
 ### Laravel — `config/paybeta.php`
 
-| Key               | Env var                   | Default                       |
-|-------------------|----------------------------|--------------------------------|
-| `api_key`         | `PAYBETA_API_KEY`          | `''`                            |
-| `merchant_id`     | `PAYBETA_MERCHANT_ID`      | `''`                            |
-| `base_url`        | `PAYBETA_BASE_URL`         | `https://api.usepaybeta.com`  |
-| `webhook_secret`  | `PAYBETA_WEBHOOK_SECRET`   | `''`                            |
-| `timeout`         | `PAYBETA_TIMEOUT`          | `30`                            |
+| Key              | Env var                  | Default                      |
+| ---------------- | ------------------------ | ---------------------------- |
+| `api_key`        | `PAYBETA_API_KEY`        | `''`                         |
+| `merchant_id`    | `PAYBETA_MERCHANT_ID`    | `''`                         |
+| `base_url`       | `PAYBETA_BASE_URL`       | `https://api.usepaybeta.com` |
+| `webhook_secret` | `PAYBETA_WEBHOOK_SECRET` | `''`                         |
+| `timeout`        | `PAYBETA_TIMEOUT`        | `30`                         |
 
 `merchant_id` isn't read by the SDK itself — it's kept in config as a single place for the rest of your app to pull it from, since every payment-link/transaction/escrow call needs it.
 
@@ -324,8 +324,7 @@ $escrow = $paybeta->escrows()->create([
 ]);
 ```
 
-**Condition types:** `DELIVERY_CONFIRMATION`, `BUYER_CONFIRMATION`, `TIME_BASED`, `MANUAL_APPROVAL`
-**Condition logic:** `AND` (all must be met) / `OR` (any one triggers release)
+**Condition types:** `DELIVERY_CONFIRMATION`, `BUYER_CONFIRMATION`, `TIME_BASED`, `MANUAL_APPROVAL`**Condition logic:** `AND` (all must be met) / `OR` (any one triggers release)
 
 ```php
 $paybeta->escrows()->release($escrowId, ['idempotencyKey' => 'release-once']);
@@ -404,7 +403,7 @@ $evidence = $paybeta->disputes()->listEvidence($disputeId);
 
 PayBeta sends signed webhook events to your server when key state changes occur (payment completed, escrow released, dispute opened, etc.).
 
-`constructEvent()` verifies `HMAC-SHA256(webhookSecret, "{timestamp}.{rawBody}")` against the `X-PayBeta-Signature` header (sent as `sha256=<hex>`) — both the signature *and* `X-PayBeta-Timestamp` headers are required, since the timestamp is part of what's actually signed, not just metadata.
+`constructEvent()` verifies `HMAC-SHA256(webhookSecret, "{timestamp}.{rawBody}")` against the `X-PayBeta-Signature` header (sent as `sha256=<hex>`) — both the signature _and_ `X-PayBeta-Timestamp` headers are required, since the timestamp is part of what's actually signed, not just metadata.
 
 #### Laravel example
 
@@ -469,19 +468,19 @@ try {
 
 Exactly the events PayBeta can emit — there is no `dispute.cancelled` or any `escrow.*` event besides `escrow.released`.
 
-| Event type              | Description                                 |
-|--------------------------|----------------------------------------------|
-| `transaction.created`   | New transaction created                     |
-| `transaction.funded`    | Customer's payment cleared; funds received  |
-| `transaction.escrowed`  | Funds moved into escrow hold                |
-| `transaction.released`  | Funds released to seller                    |
-| `transaction.disputed`  | Dispute opened on transaction               |
-| `transaction.refunded`  | Transaction refunded to buyer               |
-| `payment.received`      | Payment confirmed as successful             |
-| `payment.failed`        | Payment failed or declined                  |
-| `dispute.opened`        | Dispute opened                              |
-| `dispute.resolved`      | Dispute resolved with outcome               |
-| `escrow.released`       | Escrow funds disbursed to seller            |
+| Event type             | Description                                |
+| ---------------------- | ------------------------------------------ |
+| `transaction.created`  | New transaction created                    |
+| `transaction.funded`   | Customer's payment cleared; funds received |
+| `transaction.escrowed` | Funds moved into escrow hold               |
+| `transaction.released` | Funds released to seller                   |
+| `transaction.disputed` | Dispute opened on transaction              |
+| `transaction.refunded` | Transaction refunded to buyer              |
+| `payment.received`     | Payment confirmed as successful            |
+| `payment.failed`       | Payment failed or declined                 |
+| `dispute.opened`       | Dispute opened                             |
+| `dispute.resolved`     | Dispute resolved with outcome              |
+| `escrow.released`      | Escrow funds disbursed to seller           |
 
 ---
 
@@ -506,14 +505,14 @@ try {
 
 **Common error codes:**
 
-| Code                     | Status | Meaning                                                     |
-|---------------------------|--------|---------------------------------------------------------------|
+| Code                     | Status | Meaning                                                      |
+| ------------------------ | ------ | ------------------------------------------------------------ |
 | `FEATURE_NOT_AVAILABLE`  | 403    | Feature not enabled on your plan (e.g. escrow on Starter)    |
 | `VOLUME_LIMIT_EXCEEDED`  | 402    | Monthly volume limit reached — upgrade your plan             |
 | `API_KEY_LIMIT_EXCEEDED` | 402    | API key count limit reached for your plan                    |
-| `NOT_FOUND`              | 404    | Resource not found                                            |
-| `UNAUTHORIZED`           | 401    | Invalid or missing API key                                    |
-| `TOO_MANY_REQUESTS`      | 429    | Rate limit exceeded                                            |
+| `NOT_FOUND`              | 404    | Resource not found                                           |
+| `UNAUTHORIZED`           | 401    | Invalid or missing API key                                   |
+| `TOO_MANY_REQUESTS`      | 429    | Rate limit exceeded                                          |
 | `BAD_REQUEST`            | 400    | Validation error — check the error message for field details |
 
 ### `PaybetaException`
@@ -544,6 +543,17 @@ composer test       # PHPUnit, mocked HTTP — no real API calls or credentials 
 composer cs-check    # code style check
 composer cs-fix      # auto-fix code style
 ```
+
+---
+
+## Releasing
+
+Versioning, [CHANGELOG.md](CHANGELOG.md), and GitHub Releases are all automated by [release-please](https://github.com/googleapis/release-please) — there's no manual version bump or tagging step.
+
+1. Commit to `main` using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `feat!:`/`BREAKING CHANGE:` footer for a major bump, etc.) — a PR's commits are linted for this automatically.
+2. release-please maintains a standing "Release PR" that accumulates those commits into `CHANGELOG.md` and the next semver version.
+3. Merging that PR tags the release and publishes a GitHub Release. `composer.json` deliberately has no `version` field — Composer itself warns against one for a Packagist-published package, since the git tag is the actual source of truth.
+4. [Packagist](https://packagist.org/packages/paybetaby/php-sdk) picks up the new tag automatically via its GitHub webhook — no separate publish step.
 
 ---
 

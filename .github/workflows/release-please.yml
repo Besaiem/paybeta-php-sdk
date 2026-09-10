@@ -1,0 +1,24 @@
+name: release-please
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          # Reads release-please-config.json / .release-please-manifest.json
+          # at the repo root. Every push to main either opens/updates a
+          # standing "Release PR" (accumulating Conventional Commits into
+          # CHANGELOG.md and bumping composer.json's version field) or, when
+          # that PR is merged, tags the merge commit and cuts a GitHub
+          # Release. Packagist watches this repo's tags directly (once
+          # submitted on packagist.org) — no publish step needed here.
+          target-branch: main
