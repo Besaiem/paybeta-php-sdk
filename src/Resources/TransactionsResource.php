@@ -51,14 +51,4 @@ class TransactionsResource extends Resource
     {
         return $this->http->get("/transactions/{$id}/history");
     }
-
-    /**
-     * Updates a transaction's status (escrow, release, dispute, refund).
-     * The gateway allows this via X-API-Key the same as any other
-     * transactions:read-permissioned call.
-     */
-    public function updateStatus(string $id, string $status): array
-    {
-        return $this->http->patch("/transactions/{$id}/status", ['status' => $status]);
-    }
 }

@@ -255,12 +255,11 @@ $transactions = $paybeta->transactions()->list([
 
 $transaction = $paybeta->transactions()->retrieve('txn-uuid');
 $events = $paybeta->transactions()->listHistory('txn-uuid');
-
-// Advance the transaction's lifecycle directly (escrow/release/dispute/refund)
-$paybeta->transactions()->updateStatus('txn-uuid', 'RELEASED');
 ```
 
 **Transaction statuses:** `INITIATED` → `FUNDED` → `IN_ESCROW` → `RELEASED` / `DISPUTED` / `REFUNDED`
+
+Statuses are advanced by PayBeta as the payment and escrow progress (the buyer confirming receipt releases the funds); there is no call to set one. Follow them with webhooks or `retrieve()`.
 
 ---
 
@@ -466,7 +465,7 @@ try {
 
 #### Event types
 
-Exactly the events PayBeta can emit — there is no `dispute.cancelled` or any `escrow.*` event besides `escrow.released`.
+Exactly the events PayBeta can emit — there is no `dispute.cancelled` and no `escrow.*` event (use `transaction.released`).
 
 | Event type             | Description                                |
 | ---------------------- | ------------------------------------------ |

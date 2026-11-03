@@ -55,18 +55,4 @@ class TransactionsResourceTest extends TestCase
 
         self::assertSame('v1/transactions', $this->requestHistory[0]['request']->getUri()->getPath());
     }
-
-    public function testUpdateStatusSendsPatch(): void
-    {
-        $client = $this->makeClient([
-            ['status' => 200, 'body' => $this->envelope(['id' => 'txn-1', 'status' => 'RELEASED'])],
-        ]);
-
-        $result = $client->transactions()->updateStatus('txn-1', 'RELEASED');
-
-        self::assertSame('RELEASED', $result['status']);
-        $request = $this->requestHistory[0]['request'];
-        self::assertSame('PATCH', $request->getMethod());
-        self::assertSame('v1/transactions/txn-1/status', $request->getUri()->getPath());
-    }
 }
